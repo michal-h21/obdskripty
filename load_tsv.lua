@@ -3,26 +3,39 @@ local function load_tsv(filename, skip_first)
   local t = {}
   local labels = {}
   local first = true
+  local broken_line = false
+  local continue = {}
   for line in io.lines( filename) do
     local i = 1
-    local l = {} 
+    local l = continue or {} 
     local cells = string.explode(line,"\t")
-    -- if first then
+    if broken_line then
+      -- poslední buňka předešlého řádku a první buňka současného patří k sobě
+      l[#l] = l[#l] .. "\n" .. (cells[1] or "")
+      for i =2, #cells do
+        table.insert(l, cells[i])
+      end
+    else
       for i,m in ipairs(cells) do -- "([^%\t]*)"
         l[labels[i] or i] = m
+        l[i] = m
         if first then
           labels[i] = m
         end
         -- i = i + 1
       end
-    -- end
-
-    first = false
+      first = false
+    end
     if not skip_first then
-      if #l ~= #labels then
-        print("spatna sirka", #l, #labels)
+      -- detekce zalomení řádku v buňce
+      if #l < #labels then
+        broken_line = true
+        continue = l
+      else
+        t[#t+1] = l
+        continue = {}
+        broken_line = false
       end
-      t[#t+1] = l
     else
       -- labels = l
     end
