@@ -108,12 +108,12 @@ local function make_log(l)
         autorcount = autorcount + 1
         log[#log + 1] = {autor = v.autor, katedra = katedra, typ = pub_type, body = body, id =  id}
       end
-      -- print(id,  v.autor, katedra, pub_type , body)
+      print(id,  v.autor, katedra, pub_type , body)
     end
     if autorcount == 0 then
       print("No authors", id)
     else
-      -- print(i, "Pocet autoru", autorcount, bodydiv,  id)
+      print(i, "Pocet autoru", autorcount, bodydiv,  id)
     end
   end
   return log
@@ -174,9 +174,9 @@ for i, k in ipairs(log) do
 end
 
 local pubtypes, pubcount = get_pubtypes(log)
--- for k,v in pairs(pubtypes) do 
---   print(k,v)
--- end
+for k,v in pairs(pubtypes) do 
+  print(k,v)
+end
 local kat_table = make_pubtable(log, pubtypes)
-print_pubtable(kat_table, pubtypes)
+-- print_pubtable(kat_table, pubtypes)
 
