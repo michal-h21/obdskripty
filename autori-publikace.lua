@@ -1,5 +1,19 @@
 
 local load_tsv = require "load_tsv"
+local argparse = require "argparse"
+local parser = argparse()
+:name("autori-publikace")
+:description [[Zpracuje výstup z OBD
+Musí to být tsv soubor s uvozovkami kolem textu ]]
+
+parser:flag("-k --katedry", "Vypíše celkové výsledky kateder")
+parser:flag("-t --typy", "Vypíše použité typy publikací")
+parser:argument("input", "Vstupní TSV soubor z OBD")
+
+
+local args = parser:parse()
+
+
 
 local id_no = 1
 local autori_no = 19
@@ -116,11 +130,12 @@ local function make_log(l)
       if v.autor then
         autorcount = autorcount + 1
         log[#log + 1] = {autor = v.autor, katedra = katedra, typ = pub_type, body = body, id =  id}
-        print(id,  v.autor, katedra, pub_type , body)
+        -- print(id,  v.autor, katedra, pub_type , body)
       end
     end
     if autorcount == 0 then
-      print(id, "No authors")
+      log[#log+1] = {id = id}
+      -- print(id, "No authors")
     else
       -- print(i, "Pocet autoru", autorcount, bodydiv,  id)
     end
@@ -132,7 +147,7 @@ local function  get_pubtypes(log)
   local pubcount = {}
   local pubtypes = {}
   for _, x in ipairs(log) do
-    local pub_type = x.typ
+    local pub_type = x.typ or ""
     pubcount[pub_type] = (pubcount[pub_type] or 0) + 1
   end
   for k,_ in pairs(pubcount) do
@@ -175,17 +190,23 @@ end
       
 
 
-local l = remove_dupl(load_tsv(arg[1], true))
+local l = remove_dupl(load_tsv(args.input, true))
 local log = make_log(l)
 
-for i, k in ipairs(log) do
-  print(k.autor, k.katedra, k.typ, k.body, k.id)
-end
-
 local pubtypes, pubcount = get_pubtypes(log)
-for k,v in pairs(pubtypes) do 
-  print(k,v)
+
+if not args.typy and not args.katedry then
+  for i, k in ipairs(log) do
+    print(k.id, k.autor, k.katedra, k.typ, k.body)
+  end
+  local pubtypes, pubcount = get_pubtypes(log)
+
+elseif args.typy then
+  for k,v in pairs(pubtypes) do 
+    print(k,v)
+  end
+elseif args.katedry then
+  local kat_table = make_pubtable(log, pubtypes)
+  print_pubtable(kat_table, pubtypes)
 end
-local kat_table = make_pubtable(log, pubtypes)
-print_pubtable(kat_table, pubtypes)
 
