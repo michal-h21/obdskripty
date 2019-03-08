@@ -1,3 +1,13 @@
+local csv = require "csv"
+-- musíme escapovat uvozovky a zalomení řádků v buňkách
+local function fix_tsv(text)
+  text = text:gsub('""([^%s])',"'%1") -- uvozovka na zacatku
+  text = text:gsub('(^%s])""', "%1'") -- uvozovka na konci
+  text = text:gsub('(%b"")', function(a) return a:gsub("\n", "|") end) -- zalomeni radku
+  return text
+end
+
+-- původní funkce, nebude používat
 local function load_tsv(filename, skip_first)
   local skip_first = skip_first
   local t = {}
@@ -44,4 +54,18 @@ local function load_tsv(filename, skip_first)
   return t
 end
 
-return load_tsv
+local function load_tsv2(filename)
+  local data = {}
+  local f = io.open(filename, "r")
+  if not f then return nil, "Cannot open ".. filename end
+  local text = f:read("*all")
+  local fixed = fix_tsv(text)
+  local records = csv.openstring(fixed,{separator="\t"})
+  for record in records:lines() do
+    data[#data + 1] = record
+  end
+  -- for k,v in ipairs(data[1]) do print(k,v) end
+  return data
+end
+
+return load_tsv2
