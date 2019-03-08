@@ -6,8 +6,10 @@ local parser = argparse()
 :description [[Zpracuje výstup z OBD
 Musí to být tsv soubor s uvozovkami kolem textu ]]
 
-parser:flag("-k --katedry", "Vypíše celkové výsledky kateder")
+parser:mutex(
+parser:flag("-k --katedry", "Vypíše celkové výsledky kateder"),
 parser:flag("-t --typy", "Vypíše použité typy publikací")
+)
 parser:argument("input", "Vstupní TSV soubor z OBD")
 
 
@@ -20,6 +22,8 @@ local autori_no = 19
 local typ_no= 6
 local druh_no= 5
 local jazyk_no= 11
+local wos_no = 86
+local scopus_no = 85
 
 local autor_regex = "(.*)%((.-)%)%s*%[(.-)%]%s*%[(.-)%]"
 
@@ -122,19 +126,22 @@ local function make_log(l)
     local jazyk  = v[jazyk_no]
     local autori = get_pubauthors(v) 
     local bodydiv = #autori 
+    local wos = v[wos_no]
+    local scopus = v[scopus_no]
     local autorcount = 0
     for k, v in ipairs(autori) do
       local katedra, poc_kateder, poc_xxx = get_author(v)
       local body = 1 / bodydiv
-      local pub_type = get_type(typ, druh, jazyk)
+      -- local pub_type = get_type(typ, druh, jazyk)
+      local pub_type = typ
       if v.autor then
         autorcount = autorcount + 1
-        log[#log + 1] = {autor = v.autor, katedra = katedra, typ = pub_type, body = body, id =  id}
+        log[#log + 1] = {autor = v.autor, katedra = katedra, typ = pub_type, body = body, id =  id, wos= wos, scopus=scopus}
         -- print(id,  v.autor, katedra, pub_type , body)
       end
     end
     if autorcount == 0 then
-      log[#log+1] = {id = id}
+      log[#log+1] = {id = id, body = 0, typ=typ,katedra="",wos=wos, scopus=scopus}
       -- print(id, "No authors")
     else
       -- print(i, "Pocet autoru", autorcount, bodydiv,  id)
@@ -196,8 +203,9 @@ local log = make_log(l)
 local pubtypes, pubcount = get_pubtypes(log)
 
 if not args.typy and not args.katedry then
+  print("ID", "autor", "katedra", "typ", "body", "scopus", "wos")
   for i, k in ipairs(log) do
-    print(k.id, k.autor, k.katedra, k.typ, k.body)
+    print(k.id, k.autor, k.katedra, k.typ, k.body, k.scopus, k.wos)
   end
   local pubtypes, pubcount = get_pubtypes(log)
 
