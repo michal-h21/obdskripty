@@ -1,12 +1,20 @@
 
 local load_tsv = require "load_tsv"
 
+local id_no = 1
+local autori_no = 19
+local typ_no= 6
+local druh_no= 5
+local jazyk_no= 11
+
+local autor_regex = "(.*)%((.-)%)%s*%[(.-)%]%s*%[(.-)%]"
+
 local function remove_dupl(t)
   local ids = {}
   local new = {}
   local i = 0
   for k, x in ipairs(t) do
-    local id = x[2]
+    local id = x[id_no]
     if ids[id] then
       i = i + 1
       -- print(i, "Duplikát", id)
@@ -31,12 +39,13 @@ end
 local function parse_auth(s)
   local t = {}
   for aut in s:gmatch("([^|]+)") do
+    local autor, id, kat, vykaz = aut:match(autor_regex)
     local result = {}
-    if aut:match("Vykaz%.:.*[Pp][Ee][Dd][Ff]") then
+    if autor and vykaz:match(":.*[Pp][Ee][Dd][Ff]") then
       -- print(aut)
-      local autor, id, kat, vykaz = aut:match("([^%(]+)%(([0-9]+).* – ([^%(]+)%(Vykaz%.:([^%)]+)")
+      -- local autor, id, kat, vykaz = aut:match("([^%(]+)%(([0-9]+).* – ([^%(]+)%(Vykaz%.:([^%)]+)")
       -- print(autor, id, kat, vykaz)
-      autor = autor:gsub("^%s*%[G%]", ""):gsub("^%s*", ""):gsub("%s*$", "")
+      autor = autor:gsub("^%s*%[.%]", ""):gsub("^%s*", ""):gsub("%s*$", "")
       result.autor = autor
       result.id = id
       result.katedry = parse_kat(kat)
@@ -47,7 +56,7 @@ local function parse_auth(s)
 end
 
 local function get_pubauthors(x) 
-  local autori = x[7] or ""
+  local autori = x[autori_no] or ""
   return parse_auth(autori)
 end 
 
@@ -93,10 +102,10 @@ end
 local function make_log(l)
   local log = {}
   for i, v in pairs(l) do
-    local id = v[2]
-    local typ = v[3]
-    local druh = v[10]
-    local jazyk  = v[11]
+    local id = v[id_no]
+    local typ = v[typ_no]
+    local druh = v[druh_no]
+    local jazyk  = v[jazyk_no]
     local autori = get_pubauthors(v) 
     local bodydiv = #autori 
     local autorcount = 0
@@ -107,13 +116,13 @@ local function make_log(l)
       if v.autor then
         autorcount = autorcount + 1
         log[#log + 1] = {autor = v.autor, katedra = katedra, typ = pub_type, body = body, id =  id}
+        print(id,  v.autor, katedra, pub_type , body)
       end
-      print(id,  v.autor, katedra, pub_type , body)
     end
     if autorcount == 0 then
-      print("No authors", id)
+      print(id, "No authors")
     else
-      print(i, "Pocet autoru", autorcount, bodydiv,  id)
+      -- print(i, "Pocet autoru", autorcount, bodydiv,  id)
     end
   end
   return log
@@ -178,5 +187,5 @@ for k,v in pairs(pubtypes) do
   print(k,v)
 end
 local kat_table = make_pubtable(log, pubtypes)
--- print_pubtable(kat_table, pubtypes)
+print_pubtable(kat_table, pubtypes)
 
