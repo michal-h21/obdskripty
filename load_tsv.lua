@@ -61,8 +61,10 @@ local function load_tsv2(filename)
   local text = f:read("*all")
   local fixed = fix_tsv(text)
   local records = csv.openstring(fixed,{separator="\t"})
+  local first = true -- ignore the first line with a header
   for record in records:lines() do
-    data[#data + 1] = record
+    if not first then data[#data + 1] = record end
+    first = false
   end
   -- for k,v in ipairs(data[1]) do print(k,v) end
   return data
