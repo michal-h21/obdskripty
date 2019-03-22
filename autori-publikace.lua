@@ -20,12 +20,13 @@ local args = parser:parse()
 local id_no = 1
 local autori_no = 19
 local typ_no= 6
+local typ_casopisu_no = 27
 local druh_no= 5
 local jazyk_no= 11
 local wos_no = 86
 local scopus_no = 85
 
-local autor_regex = "(.*)%((.-)%)%s*%[(.-)%]%s*%[(.-)%]"
+local autor_regex = "(.*)%((.-)%)%s%{?[^%}]*}?%s*%[(.-)%]%s*%[(.-)%]"
 
 local function remove_dupl(t)
   local ids = {}
