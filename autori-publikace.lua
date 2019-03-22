@@ -64,7 +64,7 @@ local function parse_auth(s)
       -- print(aut)
       -- local autor, id, kat, vykaz = aut:match("([^%(]+)%(([0-9]+).* – ([^%(]+)%(Vykaz%.:([^%)]+)")
       -- print(autor, id, kat, vykaz)
-      autor = autor:gsub("^%s*%[.%]", ""):gsub("^%s*", ""):gsub("%s*$", "")
+      autor = autor:gsub("^%s*%[.%]", ""):gsub("^%s*", ""):gsub("%s*$", ""):gsub("{.-}%s*","")
       result.autor = autor
       result.id = id
       result.katedry = parse_kat(kat)
