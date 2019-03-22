@@ -125,6 +125,7 @@ local function make_log(l)
     local typ = v[typ_no]
     local druh = v[druh_no]
     local jazyk  = v[jazyk_no]
+    local typ_casopisu = v[typ_casopisu_no]
     local autori = get_pubauthors(v) 
     local bodydiv = #autori 
     local wos = v[wos_no]
@@ -137,7 +138,7 @@ local function make_log(l)
       local pub_type = typ
       if v.autor then
         autorcount = autorcount + 1
-        log[#log + 1] = {autor = v.autor, katedra = katedra, typ = pub_type, body = body, id =  id, wos= wos, scopus=scopus}
+        log[#log + 1] = {autor = v.autor, katedra = katedra, typ = pub_type, body = body, id =  id, wos= wos, scopus=scopus,typ_casopisu=typ_casopisu}
         -- print(id,  v.autor, katedra, pub_type , body)
       end
     end
@@ -204,9 +205,12 @@ local log = make_log(l)
 local pubtypes, pubcount = get_pubtypes(log)
 
 if not args.typy and not args.katedry then
-  print("ID", "autor", "katedra", "typ", "body", "scopus", "wos")
+  local function format_body(body)
+    return tostring(body):gsub("%.", ",")
+  end
+  print("ID", "autor", "katedra", "typ", "typ časopisu", "body", "scopus", "wos")
   for i, k in ipairs(log) do
-    print(k.id, k.autor, k.katedra, k.typ, k.body, k.scopus, k.wos)
+    print(k.id, k.autor, k.katedra, k.typ, k.typ_casopisu,format_body(k.body), k.scopus, k.wos)
   end
   local pubtypes, pubcount = get_pubtypes(log)
 
