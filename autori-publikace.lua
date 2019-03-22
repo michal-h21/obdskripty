@@ -186,12 +186,16 @@ local function make_pubtable(log, pubtypes)
   return katedry
 end
     
+local function format_body(body)
+  return tostring(body):gsub("%.", ",")
+end
+
 local function print_pubtable(tbl, pubtypes)
   print("", table.concat(pubtypes, "\t"))
   for katedra, rec in pairs(tbl) do
     local t = {katedra}
     for _,label in ipairs(pubtypes) do
-      t[#t+1] = rec[label] or 0
+      t[#t+1] = format_body(rec[label]) or 0
     end
     print(table.concat(t, "\t"))
   end
@@ -205,9 +209,6 @@ local log = make_log(l)
 local pubtypes, pubcount = get_pubtypes(log)
 
 if not args.typy and not args.katedry then
-  local function format_body(body)
-    return tostring(body):gsub("%.", ",")
-  end
   print("ID", "autor", "katedra", "typ", "typ časopisu", "body", "scopus", "wos")
   for i, k in ipairs(log) do
     print(k.id, k.autor, k.katedra, k.typ, k.typ_casopisu,format_body(k.body), k.scopus, k.wos)
