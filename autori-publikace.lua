@@ -57,6 +57,9 @@ end
 
 local function parse_auth(s)
   local t = {}
+  -- pročistit nesmyslnné údaje
+  s = s:gsub("%b{}","")
+  s = s:gsub("|[%s0-9]+%}","|")
   for aut in s:gmatch("([^|]+)") do
     local autor, id, kat, vykaz = aut:match(autor_regex)
     local result = {}
