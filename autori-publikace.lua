@@ -25,6 +25,8 @@ local druh_no= 5
 local jazyk_no= 11
 local wos_no = 86
 local scopus_no = 85
+local vroceni_no = 8
+local zdroj_no = 26
 
 local autor_regex = "(.*)%((.-)%)%s%{?[^%}]*}?%s*%[(.-)%]%s*%[(.-)%]"
 
@@ -128,6 +130,8 @@ local function make_log(l)
     local typ = v[typ_no]
     local druh = v[druh_no]
     local jazyk  = v[jazyk_no]
+    local zdroj = v[zdroj_no]
+    local vroceni = v[vroceni_no]
     local typ_casopisu = v[typ_casopisu_no]
     local autori = get_pubauthors(v) 
     local bodydiv = #autori 
@@ -141,7 +145,7 @@ local function make_log(l)
       local pub_type = typ
       if v.autor then
         autorcount = autorcount + 1
-        log[#log + 1] = {autor = v.autor, katedra = katedra, typ = pub_type, body = body, id =  id, wos= wos, scopus=scopus,typ_casopisu=typ_casopisu}
+        log[#log + 1] = {autor = v.autor, katedra = katedra, typ = pub_type, body = body, id =  id, wos= wos, scopus=scopus,typ_casopisu=typ_casopisu,zdroj = zdroj, vroceni=vroceni}
         -- print(id,  v.autor, katedra, pub_type , body)
       end
     end
@@ -212,9 +216,9 @@ local log = make_log(l)
 local pubtypes, pubcount = get_pubtypes(log)
 
 if not args.typy and not args.katedry then
-  print("ID", "autor", "katedra", "typ", "typ časopisu", "body", "scopus", "wos")
+  print("ID", "autor", "katedra", "typ", "typ časopisu", "body", "scopus", "wos", "zdroj", "vroceni")
   for i, k in ipairs(log) do
-    print(k.id, k.autor, k.katedra, k.typ, k.typ_casopisu,format_body(k.body), k.scopus, k.wos)
+    print(k.id, k.autor, k.katedra, k.typ, k.typ_casopisu,format_body(k.body), k.scopus, k.wos, k.zdroj, k.vroceni)
   end
   local pubtypes, pubcount = get_pubtypes(log)
 
