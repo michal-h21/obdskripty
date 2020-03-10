@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+# zpracování xls souboru exportovaného z OBD
+# pokud skript selže,m je třeba xls soubor zkonvertovat 
+# na csv pomocí příkazu in2csv 
+# pomocí příkazu csvcut -n názevcsv
+# musíme nalézt čísla sloupců ID,RIV číslo,Autoři
+# in2csv $1 |  csvcut -c 1,19,91 | csvformat -T
+cat $1 | csvcut -c 1,19,91  | csvformat -T
+
+# ${1%.xlsx}.csv
+
