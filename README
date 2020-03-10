@@ -1,0 +1,7 @@
+# Jak vytvořit tabulku pro výpočet podílů výsledků
+
+Exportovat excelovký soubor na tsv, všechny hodnoty uzavřít do dvojitých uvozovek, separator tabulátor
+
+spustit příkaz 
+
+    texlua autori-publikace.lua soubor.tsv > vysledky.tsv
