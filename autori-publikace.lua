@@ -63,7 +63,14 @@ local function parse_auth(s)
   s = s:gsub("%b{}","")
   s = s:gsub("|[%s0-9]+%}","|")
   for aut in s:gmatch("([^|]+)") do
-    local autor, id, kat, vykaz = aut:match(autor_regex)
+    -- local autor, id, kat, vykaz = aut:match(autor_regex)
+    local autor, id, rest = aut:match("(.-)%s+%((.-)%)(.*)")
+    local rest = rest or ""
+    local kat, rest = rest:match("%[(.-)%](.*)") 
+    local newrest = rest or ""
+    local vykaz = newrest:match("%[(.-)%](.*)")  
+    -- vykazovana katedra. pokud neni uvedena, vezmeme katedru
+    vykaz = vykaz or kat or ""
     local result = {}
     if autor and vykaz:match(":.*[Pp][Ee][Dd][Ff]") then
       -- print(aut)
@@ -73,6 +80,8 @@ local function parse_auth(s)
       result.autor = autor
       result.id = id
       result.katedry = parse_kat(kat)
+    else
+      -- print("No author match", aut, autor,id, rest,  kat)
     end
     t[#t+1] = result
   end
@@ -151,7 +160,7 @@ local function make_log(l)
     end
     if autorcount == 0 then
       log[#log+1] = {id = id, body = 0, typ=typ,katedra="",wos=wos, scopus=scopus}
-      -- print(id, "No authors")
+      -- print(id, "No authors", v[autori_no])
     else
       -- print(i, "Pocet autoru", autorcount, bodydiv,  id)
     end
