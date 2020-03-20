@@ -1,4 +1,4 @@
-local csv = require "csv"
+local csv = require "csv-copy"
 -- musíme escapovat uvozovky a zalomení řádků v buňkách
 local function fix_tsv(text)
   text = text:gsub('""([^%s])',"'%1") -- uvozovka na zacatku
