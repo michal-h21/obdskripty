@@ -54,6 +54,30 @@ local function load_tsv(filename, skip_first)
   return t
 end
 
+local function is_multiline(record)
+  -- detekce je primitivní, první položka záznamu je ID, které není nikdy rozdělené na víc řádků
+  -- když chybí, můžeme předpokládat, že současný řádek patří k předešlému záznamu
+  if record[1] == "" then
+    return true
+  end
+  return false
+end
+
+
+local function join_lines(data, record)
+  -- spojit buňky, které patří k jednomu záznamu a jsou na jednom řádku
+  -- získat poslední záznam a přidávat k němu data z řádku
+  local last_record = data[#data]
+  for i, x in ipairs(record) do
+    -- přidat jen neprázdné řetězce
+    if x~="" then
+      -- oddělit řádky pomocí znaku |, aby šly později zase rozdělit
+      last_record[i] = last_record[i] .. "|" .. x
+    end
+  end
+  return data
+end
+
 local function load_tsv2(filename)
   local data = {}
   local f = io.open(filename, "r")
@@ -62,9 +86,18 @@ local function load_tsv2(filename)
   local fixed = fix_tsv(text)
   local records = csv.openstring(fixed,{separator="\t"})
   local first = true -- ignore the first line with a header
+  local i = 1
   for record in records:lines() do
-    if not first then data[#data + 1] = record end
+    if not first then 
+      -- detekuj řádek, který je vyprodukovaný z rozdělených buňek
+      if is_multiline(record) then
+        join_lines(data, record)
+      else
+        data[#data + 1] = record 
+      end
+    end
     first = false
+    i = i + 1
   end
   -- for k,v in ipairs(data[1]) do print(k,v) end
   return data
