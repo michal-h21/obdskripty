@@ -18,6 +18,7 @@ local args = parser:parse()
 
 
 local id_no = 1
+local fakulta_no = 2
 local autori_no = 19
 local typ_no= 6
 local typ_casopisu_no = 27
@@ -144,6 +145,7 @@ local function make_log(l)
     local druh = v[druh_no]
     local jazyk  = v[jazyk_no]
     local zdroj = v[zdroj_no]
+    local fakulta = v[fakulta_no]
     local vroceni = v[vroceni_no]
     local stranky = v[stranky_no]
     local zeme = v[zeme_no]
@@ -164,7 +166,8 @@ local function make_log(l)
         log[#log + 1] = {autor = v.autor, katedra = katedra, typ = pub_type, 
         body = body, id =  id, wos= wos, scopus=scopus,
         typ_casopisu=typ_casopisu,zdroj = zdroj, vroceni=vroceni, 
-        jazyk = jazyk, zeme = zeme, vydavatel = vydavatel, stranky = stranky}
+        jazyk = jazyk, fakulta = fakulta, zeme = zeme, 
+        vydavatel = vydavatel, stranky = stranky}
         -- print(id,  v.autor, katedra, pub_type , body)
       end
     end
@@ -237,7 +240,7 @@ local pubtypes, pubcount = get_pubtypes(log)
 if not args.typy and not args.katedry then
   print("ID", "autor", "katedra", "typ", "typ časopisu", "body", "scopus", "wos", "zdroj", "vroceni", "rozsah stran", "země", "vydavatel")
   for i, k in ipairs(log) do
-    print(k.id, k.autor, k.katedra, k.typ, k.typ_casopisu,format_body(k.body), k.scopus, k.wos, k.zdroj, k.vroceni, k.stranky, k.zeme, k.vydavatel)
+    print(k.id, k.autor, k.fakulta, k.katedra, k.typ, k.typ_casopisu,format_body(k.body), k.scopus, k.wos, k.zdroj, k.vroceni, k.stranky, k.zeme, k.vydavatel)
   end
   local pubtypes, pubcount = get_pubtypes(log)
 
