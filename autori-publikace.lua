@@ -23,6 +23,9 @@ local typ_no= 6
 local typ_casopisu_no = 27
 local druh_no= 5
 local jazyk_no= 11
+local zeme_no = 32 -- sloupec AF
+local stranky_no = 35 -- sloupec AI
+local vydavatel_no = 30 -- sloupec AD
 local wos_no = 86
 local scopus_no = 85
 local vroceni_no = 8
@@ -93,6 +96,7 @@ local function get_pubauthors(x)
   return parse_auth(autori)
 end 
 
+-- tahle funkce se už na nic nepoužívá
 local function get_type(typ, druh, jazyk)
   local types = {["KAPITOLA V KNIZE"] = "BC",
   KNIHA = "B"}
@@ -141,6 +145,9 @@ local function make_log(l)
     local jazyk  = v[jazyk_no]
     local zdroj = v[zdroj_no]
     local vroceni = v[vroceni_no]
+    local stranky = v[stranky_no]
+    local zeme = v[zeme_no]
+    local vydavatel = v[vydavatel_no]
     local typ_casopisu = v[typ_casopisu_no]
     local autori = get_pubauthors(v) 
     local bodydiv = #autori 
@@ -154,7 +161,10 @@ local function make_log(l)
       local pub_type = typ
       if v.autor then
         autorcount = autorcount + 1
-        log[#log + 1] = {autor = v.autor, katedra = katedra, typ = pub_type, body = body, id =  id, wos= wos, scopus=scopus,typ_casopisu=typ_casopisu,zdroj = zdroj, vroceni=vroceni}
+        log[#log + 1] = {autor = v.autor, katedra = katedra, typ = pub_type, 
+        body = body, id =  id, wos= wos, scopus=scopus,
+        typ_casopisu=typ_casopisu,zdroj = zdroj, vroceni=vroceni, 
+        jazyk = jazyk, zeme = zeme, vydavatel = vydavatel, stranky = stranky}
         -- print(id,  v.autor, katedra, pub_type , body)
       end
     end
@@ -225,9 +235,9 @@ local log = make_log(l)
 local pubtypes, pubcount = get_pubtypes(log)
 
 if not args.typy and not args.katedry then
-  print("ID", "autor", "katedra", "typ", "typ časopisu", "body", "scopus", "wos", "zdroj", "vroceni")
+  print("ID", "autor", "katedra", "typ", "typ časopisu", "body", "scopus", "wos", "zdroj", "vroceni", "rozsah stran", "země", "vydavatel")
   for i, k in ipairs(log) do
-    print(k.id, k.autor, k.katedra, k.typ, k.typ_casopisu,format_body(k.body), k.scopus, k.wos, k.zdroj, k.vroceni)
+    print(k.id, k.autor, k.katedra, k.typ, k.typ_casopisu,format_body(k.body), k.scopus, k.wos, k.zdroj, k.vroceni, k.stranky, k.zeme, k.vydavatel)
   end
   local pubtypes, pubcount = get_pubtypes(log)
 
