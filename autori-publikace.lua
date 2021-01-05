@@ -25,7 +25,7 @@ local typ_casopisu_no = 27
 local druh_no= 5
 local jazyk_no= 11
 local zeme_no = 32 -- sloupec AF
-local stranky_no = 35 -- sloupec AI
+local stranky_no = 36 -- sloupec AJ
 local vydavatel_no = 30 -- sloupec AD
 local wos_no = 86
 local scopus_no = 85
@@ -238,7 +238,7 @@ local log = make_log(l)
 local pubtypes, pubcount = get_pubtypes(log)
 
 if not args.typy and not args.katedry then
-  print("ID", "autor", "fakulta",   "katedra", "typ", "typ časopisu", "body", "scopus", "wos", "zdroj", "vroceni", "rozsah stran", "země", "vydavatel")
+  print("ID", "autor", "fakulta",   "katedra", "typ", "typ časopisu", "body", "scopus", "wos", "zdroj", "vroceni", "počet stran", "země", "vydavatel")
   for i, k in ipairs(log) do
     print(k.id, k.autor, k.fakulta, k.katedra, k.typ, k.typ_casopisu,format_body(k.body), k.scopus, k.wos, k.zdroj, k.vroceni, k.stranky, k.zeme, k.vydavatel)
   end
