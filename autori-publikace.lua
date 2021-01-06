@@ -152,15 +152,15 @@ local function make_log(l)
     local vydavatel = v[vydavatel_no]
     local typ_casopisu = v[typ_casopisu_no]
     local autori = get_pubauthors(v) 
-    local bodydiv = #autori 
+    local bodydiv = #autori or 1
     local wos = v[wos_no]
     local scopus = v[scopus_no]
     local autorcount = 0
     for k, v in ipairs(autori) do
       local katedra, poc_kateder, poc_xxx = get_author(v)
-      local body = 1 / bodydiv
       -- local pub_type = get_type(typ, druh, jazyk)
       local pub_type = typ
+      local body = 1 / bodydiv
       if v.autor then
         autorcount = autorcount + 1
         log[#log + 1] = {autor = v.autor, katedra = katedra, typ = pub_type, 
@@ -172,7 +172,11 @@ local function make_log(l)
       end
     end
     if autorcount == 0 then
-      log[#log+1] = {id = id, body = 0, typ=typ,katedra="",wos=wos, scopus=scopus}
+        log[#log + 1] = {typ = pub_type, 
+        body = body, id =  id, wos= wos, scopus=scopus,
+        typ_casopisu=typ_casopisu,zdroj = zdroj, vroceni=vroceni, 
+        jazyk = jazyk, fakulta = fakulta, zeme = zeme, 
+        vydavatel = vydavatel, stranky = stranky}
       -- print(id, "No authors", v[autori_no])
     else
       -- print(i, "Pocet autoru", autorcount, bodydiv,  id)
