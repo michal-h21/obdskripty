@@ -39,14 +39,18 @@ local function remove_dupl(t)
   local new = {}
   local i = 0
   for k, x in ipairs(t) do
-    local id = x[id_no]
-    if ids[id] then
-      i = i + 1
-      -- print(i, "Duplikát", id)
-    else 
-      new[#new+1] = x
+    -- ignore first line if it contains header
+    if k == 1 and x[1] == "ID" then
+    else
+      local id = x[id_no]
+      if ids[id] then
+        i = i + 1
+        -- print(i, "Duplikát", id)
+      else 
+        new[#new+1] = x
+      end
+      ids[id] = x
     end
-    ids[id] = x
   end
   return new
 end
