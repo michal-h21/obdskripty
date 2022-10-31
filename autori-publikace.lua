@@ -173,7 +173,7 @@ local function make_log(l)
       local body = 1 / bodydiv
       if v.autor then
         autorcount = autorcount + 1
-        log[#log + 1] = {autor = v.autor, katedra = katedra, typ = pub_type, 
+        log[#log + 1] = {autor = v.autor, autor_id = v.id, katedra = katedra, typ = pub_type, 
         body = body, id =  id, wos= wos, scopus=scopus,
         typ_casopisu=typ_casopisu,zdroj = zdroj, vroceni=vroceni, 
         jazyk = jazyk, fakulta = fakulta, zeme = zeme, 
@@ -252,9 +252,9 @@ local log = make_log(l)
 local pubtypes, pubcount = get_pubtypes(log)
 
 if not args.typy and not args.katedry then
-  print("ID", "autor", "fakulta",   "katedra", "typ", "typ časopisu", "body", "scopus", "wos", "zdroj", "vroceni", "počet stran", "země", "vydavatel", "jazyk", "financování", "primární obor", "sekundární obor")
+  print("ID", "autor", "ator_id","fakulta",   "katedra", "typ", "typ časopisu", "body", "scopus", "wos", "zdroj", "vroceni", "počet stran", "země", "vydavatel", "jazyk", "financování", "primární obor", "sekundární obor")
   for i, k in ipairs(log) do
-    print(k.id, k.autor, k.fakulta, k.katedra, k.typ, k.typ_casopisu,format_body(k.body), k.scopus, k.wos, k.zdroj, k.vroceni, k.stranky, k.zeme, k.vydavatel, k.jazyk, k.financovani, k.primarni,k.sekundarni)
+    print(k.id, k.autor, k.autor_id, k.fakulta, k.katedra, k.typ, k.typ_casopisu,format_body(k.body), k.scopus, k.wos, k.zdroj, k.vroceni, k.stranky, k.zeme, k.vydavatel, k.jazyk, k.financovani, k.primarni,k.sekundarni)
   end
   local pubtypes, pubcount = get_pubtypes(log)
 
