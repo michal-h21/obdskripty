@@ -1,11 +1,9 @@
 # Jak vytvořit tabulku pro výpočet podílů výsledků
 
-Exportovat excelovký soubor na tsv, všechny hodnoty uzavřít do dvojitých uvozovek, separator tabulátor
+Export z OBD musíme nejdřív naimportovat do TSV souboru pomocí příkazu
 
-Například pomocí:
+    texlua import.lua Seznamliteratury.xlsx > soubor.tsv
 
-    xlsx2csv -q all -d tab filename.xlsx > filename.tsv
-
-spustit příkaz 
+pak můžeme spustit příkaz 
 
     texlua autori-publikace.lua soubor.tsv > vysledky.tsv
