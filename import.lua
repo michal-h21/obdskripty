@@ -53,6 +53,8 @@ end
 local command 
 
 if input_name:match("xlsx$") then
+  -- musíme escapovat špatné znaky 
+  input_name = input_name:gsub("%(", "\\("):gsub("%)", "\\)")
   command = io.popen("xlsx2csv -q all -d tab " .. input_name, "r")
 else
   command = io.open(input_name, "r")
