@@ -74,12 +74,13 @@ for line in command:lines() do
     print(line)
   else
     local current = get_fields(line)
-    buffer = join_buffer(buffer, current)
     if current[1] ~= "" then
       print_buffer(buffer, number_of_fields)
       buffer = {}
     end
+    buffer = join_buffer(buffer, current)
   end
 end
+print_buffer(buffer, number_of_fields)
 
 command:close()
