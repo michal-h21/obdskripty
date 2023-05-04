@@ -19,6 +19,7 @@ local args = parser:parse()
 
 local id_no = 1
 local fakulta_no = 2
+local stav_no = 4
 local autori_no = 19
 local typ_no= 6
 local typ_casopisu_no = 27
@@ -27,12 +28,15 @@ local jazyk_no= 11
 local zeme_no = 32 -- sloupec AF
 local stranky_no = 36 -- sloupec AJ
 local vydavatel_no = 30 -- sloupec AD
-local wos_no = 86
-local scopus_no = 85
+-- local wos_no = 86
+local wos_no = 89
+-- local scopus_no = 85
+local scopus_no = 88 -- sloupec CJ
 local vroceni_no = 8
 local zdroj_no = 26
 local financovani_no = 25
 local primarni_no = 92
+local rivobor_no = 93 -- sloupec CO
 local sekundarni_no = 94
 
 local autor_regex = "(.*)%((.-)%)%s%{?[^%}]*}?%s*%[(.-)%]%s*%[(.-)%]"
@@ -156,7 +160,9 @@ local function make_log(l)
     local vroceni = v[vroceni_no]
     local stranky = v[stranky_no]
     local primarni = v[primarni_no]
+    local rivobor = v[rivobor_no]
     local sekundarni = v[sekundarni_no]
+    local stav = v[stav_no]
     local zeme = v[zeme_no]
     local vydavatel = v[vydavatel_no]
     local financovani = v[financovani_no]
@@ -177,7 +183,7 @@ local function make_log(l)
         body = body, id =  id, wos= wos, scopus=scopus,
         typ_casopisu=typ_casopisu,zdroj = zdroj, vroceni=vroceni, 
         jazyk = jazyk, fakulta = fakulta, zeme = zeme, 
-        vydavatel = vydavatel, stranky = stranky, financovani = financovani, primarni=primarni, sekundarni=sekundarni}
+        vydavatel = vydavatel, stranky = stranky, financovani = financovani, primarni=primarni, sekundarni=sekundarni,rivobor=rivobor, stav=stav}
         -- print(id,  v.autor, katedra, pub_type , body)
       end
     end
@@ -186,7 +192,7 @@ local function make_log(l)
         body = body, id =  id, wos= wos, scopus=scopus,
         typ_casopisu=typ_casopisu,zdroj = zdroj, vroceni=vroceni, 
         jazyk = jazyk, fakulta = fakulta, zeme = zeme, 
-        vydavatel = vydavatel, stranky = stranky, financovani = financovani, primarni=primarni, sekundarni=sekundarni}
+        vydavatel = vydavatel, stranky = stranky, financovani = financovani, primarni=primarni, sekundarni=sekundarni, rivobor=rivobor, stav=stav}
       -- print(id, "No authors", v[autori_no])
     else
       -- print(i, "Pocet autoru", autorcount, bodydiv,  id)
@@ -252,9 +258,9 @@ local log = make_log(l)
 local pubtypes, pubcount = get_pubtypes(log)
 
 if not args.typy and not args.katedry then
-  print("ID", "autor", "ator_id","fakulta",   "katedra", "typ", "typ časopisu", "body", "scopus", "wos", "zdroj", "vroceni", "počet stran", "země", "vydavatel", "jazyk", "financování", "primární obor", "sekundární obor")
+  print("ID", "autor", "autor_id","fakulta",   "katedra", "stav", "typ", "typ časopisu", "body", "scopus", "wos", "zdroj", "vroceni", "počet stran", "země", "vydavatel", "jazyk", "financování", "primární obor", "sekundární obor","riv obor")
   for i, k in ipairs(log) do
-    print(k.id, k.autor, k.autor_id, k.fakulta, k.katedra, k.typ, k.typ_casopisu,format_body(k.body), k.scopus, k.wos, k.zdroj, k.vroceni, k.stranky, k.zeme, k.vydavatel, k.jazyk, k.financovani, k.primarni,k.sekundarni)
+    print(k.id, k.autor, k.autor_id, k.fakulta, k.katedra, k.stav, k.typ, k.typ_casopisu,format_body(k.body), k.scopus, k.wos, k.zdroj, k.vroceni, k.stranky, k.zeme, k.vydavatel, k.jazyk, k.financovani, k.primarni,k.sekundarni, k.rivobor)
   end
   local pubtypes, pubcount = get_pubtypes(log)
 
