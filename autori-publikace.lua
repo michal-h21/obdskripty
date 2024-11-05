@@ -260,7 +260,7 @@ local pubtypes, pubcount = get_pubtypes(log)
 if not args.typy and not args.katedry then
   print("ID", "autor", "autor_id","fakulta",   "katedra", "stav", "typ", "typ časopisu", "body", "scopus", "wos", "zdroj", "vroceni", "počet stran", "země", "vydavatel", "jazyk", "financování", "primární obor", "sekundární obor","riv obor")
   for i, k in ipairs(log) do
-    print(k.id, k.autor, k.autor_id, k.fakulta, k.katedra, k.stav, k.typ, k.typ_casopisu,format_body(k.body), k.scopus, k.wos, k.zdroj, k.vroceni, k.stranky, k.zeme, k.vydavatel, k.jazyk, k.financovani, k.primarni,k.sekundarni, k.rivobor)
+    print(k.id, k.autor or "Bez autora z fakulty", k.autor_id or "", k.fakulta or "", k.katedra or "" , k.stav or "", k.typ or "", k.typ_casopisu or "",format_body(k.body) or "", k.scopus, k.wos, k.zdroj, k.vroceni, k.stranky, k.zeme, k.vydavatel, k.jazyk, k.financovani, k.primarni,k.sekundarni, k.rivobor)
   end
   local pubtypes, pubcount = get_pubtypes(log)
 
